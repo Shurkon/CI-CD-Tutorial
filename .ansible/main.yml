@@ -1,0 +1,27 @@
+---
+- hosts: servers
+  gather_facts: no
+  
+  vars:
+    PROJECT_NAME: "api"
+    DEST_PATH: "/home/{{ SERVER_USER }}/deploy"
+    REPO_BRANCH: "main"
+    URL: "https://gitlab-ci-token:{{ lookup('env', 'CI_JOB_TOKEN') }}@gitlab.com/root/ci-cd-ejemplo.git" # CI_JOB_TOKEN is a special variable that is used as a "deploy key" only for that job 
+
+  tasks:
+    - name: "Create the path"
+      file:
+        path: "{{ DEST_PATH }}"
+        state: directory
+
+    - name: "Clone the project"
+      git:
+        repo: "{{ URL }}"
+        dest: "{{ DEST_PATH }}"
+        version: "{{ REPO_BRANCH }}"
+        force: yes
+
+    - name: "Docker Compose"
+      shell: "docker compose up -d --build"
+      args:
+        chdir: "{{ DEST_PATH }}"

@@ -1,5 +1,6 @@
 stages:
   - test
+  - deploy # .cd/cd.yml
 
 variables:
   API_NAME: mi-api-service # The name is defined in the compose.yml 
@@ -20,3 +21,7 @@ test:
 
   after_script:
     - docker compose -f compose.yml -f compose.runner.yml down -v
+
+# Deployment
+include:
+  - local: '.cd/cd.yml'

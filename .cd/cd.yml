@@ -1,0 +1,18 @@
+deploy_job:
+  stage: deploy
+  image: alpine:latest
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  before_script:
+    - apk add ansible openssh-client git
+    - chmod 400 $SSH_PRIVATE_KEY
+  script:
+    - cd .ansible
+    - >
+      ansible-playbook -i hosts main.yml 
+      -e "SERVER_IP=$SERVER_IP" 
+      -e "SERVER_USER=$SERVER_USER" 
+      -e "SSH_PRIVATE_KEY=$SSH_PRIVATE_KEY" 
+      -e "CI_JOB_TOKEN=$CI_JOB_TOKEN"
+  only:
+    - main
