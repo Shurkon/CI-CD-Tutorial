@@ -1,0 +1,9 @@
+services:
+  api:
+    ports: !reset [] # Removes the 8000:8000 forwarding
+    networks:
+      - main-runner # Añade la API a esta red
+
+networks:
+  main-runner:
+    external: true # Usa la red del Runner que ya existe

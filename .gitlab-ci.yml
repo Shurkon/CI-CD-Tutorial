@@ -1,0 +1,22 @@
+stages:
+  - test
+
+variables:
+  API_NAME: mi-api-service # The name is defined in the compose.yml 
+
+test:
+  stage: test
+  image: docker:latest
+  script:
+
+    # docker compose
+    - docker compose -f compose.yml -f compose.runner.yml up -d --build
+
+    # Install curl
+    - apk add --no-cache curl
+
+    # Test
+    - curl http://$API_NAME:8000/health
+
+  after_script:
+    - docker compose -f compose.yml -f compose.runner.yml down -v

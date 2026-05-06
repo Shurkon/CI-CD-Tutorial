@@ -1,0 +1,7 @@
+services:
+  api:
+    build: .
+    image: mi-api:latest
+    container_name: mi-api-service
+    ports:
+      - "8000:8000"
